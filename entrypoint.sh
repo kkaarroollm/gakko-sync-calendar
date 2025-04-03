@@ -1,3 +1,4 @@
 #!/bin/bash
+touch /app/logs/sync.log
 cron
-tail -f /var/log/cron.log
+tail -f /app/logs/sync.log

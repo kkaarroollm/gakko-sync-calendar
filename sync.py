@@ -27,5 +27,15 @@ def main():
         logging.error(f"Error during sync: {e}")
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    os.makedirs("logs", exist_ok=True)
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler("logs/sync.log"),
+            logging.StreamHandler()
+        ]
+    )
+
     main()
