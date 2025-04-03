@@ -21,13 +21,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-RUN mkdir -p ./logs && \
-    echo "30 9 * * * python /app/sync.py >> /app/logs/sync.log 2>&1" > /etc/cron.d/gakko-sync && \
-    echo "0 3 */3 * * find /app/logs -type f -name '*.log' -mtime +2 -delete" >> /etc/cron.d/gakko-sync && \
-    chmod 0644 /etc/cron.d/gakko-sync && \
-    crontab /etc/cron.d/gakko-sync
+RUN chmod +x entrypoint.sh && chmod +x setup_cron.sh
 
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
-
-CMD ["./entrypoint.sh"]
+CMD ["/bin/bash", "-c", "./setup_cron.sh && ./entrypoint.sh"]

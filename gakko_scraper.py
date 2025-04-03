@@ -6,6 +6,7 @@ from typing import Optional, List
 
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -44,7 +45,8 @@ class GakkoHomeworkScraper:
         options.add_argument("--disable-gpu")
         options.add_argument("--window-size=1920,1080")
 
-        driver: WebDriver = webdriver.Chrome(options=options)
+        service = Service(log_output="/app/logs/selenium.log")
+        driver: WebDriver = webdriver.Chrome(service=service, options=options)
         wait: WebDriverWait = WebDriverWait(driver, 20)
 
         try:
@@ -70,9 +72,7 @@ class GakkoHomeworkScraper:
         driver.find_element(By.ID, "userNameInput").send_keys(self.username)
 
         driver.find_element(By.ID, "submitButton").click()
-        WebDriverWait(driver, 15).until(
-            presence_of_element_located((By.ID, "tasks_to_do"))
-        )
+        wait.until(presence_of_element_located((By.ID, "tasks_to_do")))
         logging.info("Logged in to Gakko")
 
     @staticmethod
