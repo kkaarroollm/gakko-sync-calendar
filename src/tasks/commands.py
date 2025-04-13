@@ -1,8 +1,7 @@
 from src.core import Command, CommandContext
-from src.tasks.details import enrich_tasks
-
-from src.tasks.dashboard import scrape_tasks_from_dashboard
 from src.exceptions import CommandPipelineError
+from src.tasks.dashboard import scrape_tasks_from_dashboard
+from src.tasks.details import enrich_tasks
 
 
 class ScrapeTasksFromDashboardCommand(Command):
@@ -14,7 +13,10 @@ class ScrapeTasksFromDashboardCommand(Command):
         context.tasks = tasks
         return context
 
+
 class FetchTaskDetailsCommand(Command):
     def execute(self, context: CommandContext) -> CommandContext:
-        context.tasks = enrich_tasks(tasks=context.tasks, session=context.session, base_url=str(context.config.base_url))
+        context.tasks = enrich_tasks(
+            tasks=context.tasks, session=context.session, base_url=str(context.config.base_url)
+        )
         return context

@@ -1,7 +1,7 @@
-from src.core import Command
-from src.core import CommandContext
+from bs4 import BeautifulSoup, Tag
+
 from src.auth.models import OAuthAuthorizationRequest
-from bs4 import BeautifulSoup
+from src.core import Command, CommandContext
 
 
 class AuthorizeCommand(Command):
@@ -16,7 +16,7 @@ class SubmitLoginCommand(Command):
         data = {
             "UserName": context.config.username,
             "Password": context.config.password.get_secret_value(),
-            "AuthMethod": "FormsAuthentication"
+            "AuthMethod": "FormsAuthentication",
         }
         context.last_response = context.session.post(context.last_response.url, data=data)
         return context
@@ -25,9 +25,10 @@ class SubmitLoginCommand(Command):
 class SubmitFormCommand(Command):
     def execute(self, context: CommandContext) -> CommandContext:
         soup = BeautifulSoup(context.last_response.text, "html.parser")
-        if not (form := soup.find("form")):
+        if not ((form := soup.find("form")) and isinstance(form, Tag)):
             raise ValueError("No form found on page.")
-        action_url = form["action"]
+
         inputs = {i["name"]: i.get("value", "") for i in form.find_all("input") if i.has_attr("name")}
+        action_url = str(form["action"])
         context.last_response = context.session.post(action_url, data=inputs)
         return context

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from src.core import CommandContext
+
+from src.core.command_context import CommandContext
+
 
 class Command(ABC):
     @abstractmethod

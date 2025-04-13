@@ -1,10 +1,11 @@
-from typing import List
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime
 import re
+from datetime import datetime
+from typing import List
 
-from src.tasks.models import ScrapedTask, EMPTY_DATE
+import requests
+from bs4 import BeautifulSoup, Tag
+
+from src.tasks.models import EMPTY_DATE, ScrapedTask
 
 
 def extract_due_date_from_html(html: str) -> datetime:
@@ -12,7 +13,9 @@ def extract_due_date_from_html(html: str) -> datetime:
     pattern = re.compile(r"countDownDate\s*=\s*(\d+);")
 
     for script in soup.find_all("script"):
-        if script.string and (match := pattern.search(script.string)):
+        if not (isinstance(script, Tag) and script.string):
+            continue
+        if match := pattern.search(script.string):
             return datetime.fromtimestamp(int(match.group(1)) // 1000)
     return EMPTY_DATE
 

@@ -1,13 +1,15 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
+
 from src.tasks.models import ScrapedTask
 
+
 def scrape_tasks_from_dashboard(session: requests.Session, base_url: str) -> list[ScrapedTask]:
-    response = session.get( base_url.rstrip("/") + "/dashboard")
+    response = session.get(base_url.rstrip("/") + "/dashboard")
     soup = BeautifulSoup(response.text, "html.parser")
 
     container = soup.find("div", {"id": "tasks_to_do"})
-    if not container:
+    if not isinstance(container, Tag):
         return []
 
     tasks = []
@@ -19,10 +21,8 @@ def scrape_tasks_from_dashboard(session: requests.Session, base_url: str) -> lis
         if not (title and subject and href):
             continue
 
-        tasks.append(ScrapedTask(
-            href=href.strip(),
-            title=title.get_text(strip=True),
-            subject=subject.get_text(strip=True)
-        ))
+        tasks.append(
+            ScrapedTask(href=href.strip(), title=title.get_text(strip=True), subject=subject.get_text(strip=True))
+        )
 
     return tasks

@@ -1,28 +1,27 @@
 import logging
+from dataclasses import dataclass
 
 from src.core import Publisher, Repository
 from src.integrations.google.models import GCalendarEvent
 
 
+@dataclass
 class CalendarPublisher(Publisher[GCalendarEvent]):
-    def __init__(self, repo: Repository[GCalendarEvent]):
-        self.repo = repo
-
-    @property
-    def existing_events(self) -> dict[str, GCalendarEvent]:
-        return {e.summary: e for e in self.repo.list()}
+    repo: Repository[GCalendarEvent]
 
     def publish(self, event: GCalendarEvent) -> None:
-        match = self.existing_events.get(event.summary)
+        existing = next((e for e in self.repo.list() if e.summary == event.summary), None)
 
-        if not match:
+        if not existing:
             self.repo.add(event)
             logging.info(f"Created: {event.summary}")
             return
 
-        if match.start.dateTime == event.end.dateTime:
+        event.id = existing.id
+
+        if event.is_equal(existing):
             logging.info(f"Skipped: {event.summary}")
             return
 
-        self.repo.update(match.id, event)
+        self.repo.update(event)
         logging.info(f"Updated: {event.summary}")

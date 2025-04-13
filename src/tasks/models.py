@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Annotated
 
-from pydantic import constr, BaseModel
+from pydantic import BaseModel, constr
 
 HrefStr = Annotated[str, constr(strip_whitespace=True, pattern=r"^/.*")]
 EMPTY_DATE = datetime.min
+
 
 class ScrapedTask(BaseModel):
     href: HrefStr
@@ -18,4 +19,3 @@ class ScrapedTask(BaseModel):
 
     def absolute_url(self, base_url: str) -> str:
         return base_url.rstrip("/") + self.href
-

@@ -16,5 +16,3 @@ class CommandPipeline:
         for command in self.commands:
             self.context = command.execute(self.context)
         return self.context
-
-
