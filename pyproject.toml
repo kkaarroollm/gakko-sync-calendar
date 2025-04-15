@@ -1,0 +1,138 @@
+[project]
+name = "gakko-reminder"
+version = "0.1.0"
+description = "Sync Gakko to 3rd party applications"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4==4.13.3",
+    "google-api-python-client==2.166.0",
+    "google-auth-httplib2==0.2.0",
+    "google-auth-oauthlib==1.2.1",
+    "pydantic==2.11.3",
+    "pydantic-settings>=2.8.1",
+    "requests==2.32.3",
+    "selenium==4.30.0",
+    "types-beautifulsoup4==4.12.0.20250204",
+]
+
+[dependency-groups]
+dev = [
+    "factory-boy>=3.3.3",
+    "jinja2==3.1.6",
+    "mypy==1.15.0",
+    "pytest==8.3.5",
+    "pytest-cov==6.1.1",
+    "ruff==0.11.5",
+    "types-requests==2.32.0.20250328",
+]
+
+[tool.ruff]
+exclude = [
+    ".git",
+    ".git-rewrite",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".venv",
+    ".vscode",
+    ".idea",
+    "__pypackages__",
+    "_build",
+    "build",
+    "site-packages",
+    "venv",
+    "data",
+]
+
+line-length = 120
+indent-width = 4
+target-version = "py313"
+fix = false
+include = [
+    "src/**/*.py",
+    "tests/**/*.py",
+]
+
+
+[tool.ruff.lint]
+select = ["I", "PL", "F401", "F841", "N", "R", "E501"]
+fixable = ["ALL"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+[tool.ruff.lint.isort]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.pep8-naming]
+classmethod-decorators = [
+    "pydantic.validator",
+    "pydantic.field_validator",
+    "declared_attr",
+    "expression",
+    "comparator"
+]
+
+
+[tool.mypy]
+disallow_untyped_defs = true
+disallow_untyped_calls = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+no_implicit_optional = true
+plugins = ['pydantic.mypy']
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+
+testpaths = [
+    "tests",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "smoke: business core tests",
+]
+addopts = [
+    "-ra -q",
+    "--cov=src",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-fail-under=80"
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/__init__.py",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false

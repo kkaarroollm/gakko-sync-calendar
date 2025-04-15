@@ -1,0 +1,9 @@
+{% if include_script %}
+<script>
+  {% if include_due_date %}
+  let countDownDate = {{ timestamp }};
+  {% else %}
+  console.log("Brak daty odliczania");
+  {% endif %}
+</script>
+{% endif %}
