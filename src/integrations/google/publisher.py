@@ -10,18 +10,15 @@ class CalendarPublisher(Publisher[GCalendarEvent]):
     repo: Repository[GCalendarEvent]
 
     def publish(self, event: GCalendarEvent) -> None:
-        existing = next((e for e in self.repo.list() if e.summary == event.summary), None)
-
-        if not existing:
+        if not (existing := next((e for e in self.repo.list() if e.summary == event.summary), None)):
             self.repo.add(event)
             logging.info(f"Created: {event.summary}")
             return
 
-        event.id = existing.id
-
-        if event.is_equal(existing):
+        event_with_id = event.model_copy(update={"id": existing.id})
+        if event_with_id.is_equal(existing):
             logging.info(f"Skipped: {event.summary}")
             return
 
-        self.repo.update(event)
+        self.repo.update(event_with_id)
         logging.info(f"Updated: {event.summary}")

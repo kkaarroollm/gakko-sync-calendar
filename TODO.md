@@ -4,5 +4,5 @@
 - [ ] Add tests
 - [ ] Add docstrings
 - [x] Add Ruff and mypy/pyright
-- [ ] Fix Dockerfile 
+- [x] Fix Dockerfile 
 - [ ] Cron/entrypoint checks 

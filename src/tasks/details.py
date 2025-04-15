@@ -11,7 +11,6 @@ from src.tasks.models import EMPTY_DATE, ScrapedTask
 def extract_due_date_from_html(html: str) -> datetime:
     soup = BeautifulSoup(html, "html.parser")
     pattern = re.compile(r"countDownDate\s*=\s*(\d+);")
-
     for script in soup.find_all("script"):
         if not (isinstance(script, Tag) and script.string):
             continue
@@ -23,7 +22,6 @@ def extract_due_date_from_html(html: str) -> datetime:
 def enrich_tasks(tasks: List[ScrapedTask], session: requests.Session, base_url: str) -> List[ScrapedTask]:
     # FUTURE: consider using asyncio for parallel requests
     enriched: List[ScrapedTask] = []
-
     for task in tasks:
         response = session.get(task.absolute_url(base_url))
         due_date = extract_due_date_from_html(response.text)

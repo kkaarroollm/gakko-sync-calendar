@@ -18,7 +18,12 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "factory-boy>=3.3.3",
+    "jinja2==3.1.6",
     "mypy==1.15.0",
+    "pytest==8.3.5",
+    "pytest-cov==6.1.1",
+    "pytest-dotenv==0.5.2",
     "ruff==0.11.5",
     "types-requests==2.32.0.20250328",
 ]
@@ -49,7 +54,6 @@ indent-width = 4
 target-version = "py313"
 fix = false
 include = [
-    "conftest.py",
     "src/**/*.py",
     "tests/**/*.py",
 ]
@@ -98,8 +102,41 @@ plugins = ['pydantic.mypy']
 [[tool.mypy.overrides]]
 module = "tests.*"
 disallow_untyped_defs = false
+disallow_untyped_calls = false
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
+
+[tool.pytest]
+env_override_existing_values = 1
+env_files = "envs/pytest.env"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+
+testpaths = [
+    "tests",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "smoke: business core tests",
+]
+addopts = [
+    "-ra -q",
+    "--cov=src",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-fail-under=80"
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/__init__.py",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

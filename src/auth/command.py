@@ -23,10 +23,12 @@ class SubmitLoginCommand(Command):
 
 
 class SubmitFormCommand(Command):
+    NO_FORM_ERROR: str = "No form found on page."
+
     def execute(self, context: CommandContext) -> CommandContext:
         soup = BeautifulSoup(context.last_response.text, "html.parser")
         if not ((form := soup.find("form")) and isinstance(form, Tag)):
-            raise ValueError("No form found on page.")
+            raise ValueError(self.NO_FORM_ERROR)
 
         inputs = {i["name"]: i.get("value", "") for i in form.find_all("input") if i.has_attr("name")}
         action_url = str(form["action"])

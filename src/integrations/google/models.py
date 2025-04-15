@@ -89,6 +89,7 @@ class GCalendarEvent(BaseModel):
             self.start.date_time == other.start.date_time
             and self.end.date_time == other.end.date_time
             and self.summary == other.summary
+            and self.description == other.description
         )
 
     @classmethod
