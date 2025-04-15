@@ -92,7 +92,21 @@ Note: For production, it's recommended to host the app on Google Cloud (GCE/Clou
 docker run --rm \
   -v $PWD/.env:/app/.env \
   -v $PWD/token.json:/app/token.json \
-  kkaarroollm/gakko-reminder:v2
+  --platform linux/arm64 \
+  kkaarroollm/gakko-reminder:v2.0.0  # or use `:latest`
+```
+
+> **Note:**
+> This image is **multi-platform** (supports both `linux/amd64` and `linux/arm64`).  
+> Use the `--platform` flag to ensure compatibility with your machine.
+
+> **Tip:**
+> For the cloud deployment use `--platform linux/amd64` to avoid issues with `arm64` images.
+
+
+### 4. Run the script inside the container
+```bash
+docker exec -it <container_id> uv run python src/main.py
 ```
 
 ---
