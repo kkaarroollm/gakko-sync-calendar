@@ -82,7 +82,7 @@ with open("token.json", "w") as token_file:
 > 2. Run the script once locally to generate `token.json`  
 > 3. Copy `token.json` into the container `/app/` directory
 
-Note: For production, it's recommended to host the app on Google Cloud (GCE/Cloud Run) to avoid token expiration issues.
+Note: It’s recommended to use a token in production mode, so the TTL never expires.
 
 ---
 
