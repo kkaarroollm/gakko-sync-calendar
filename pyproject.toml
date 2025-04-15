@@ -23,7 +23,6 @@ dev = [
     "mypy==1.15.0",
     "pytest==8.3.5",
     "pytest-cov==6.1.1",
-    "pytest-dotenv==0.5.2",
     "ruff==0.11.5",
     "types-requests==2.32.0.20250328",
 ]
@@ -109,9 +108,6 @@ init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 
-[tool.pytest]
-env_override_existing_values = 1
-env_files = "envs/pytest.env"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -139,4 +135,4 @@ omit = [
 
 [tool.coverage.report]
 show_missing = true
-skip_covered = true
+skip_covered = false

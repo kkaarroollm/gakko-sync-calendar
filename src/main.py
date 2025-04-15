@@ -1,5 +1,6 @@
 import logging
 import os
+from datetime import datetime
 
 from src.auth.command import AuthorizeCommand, SubmitFormCommand, SubmitLoginCommand
 from src.core import CalendarConfig, CommandContext, CommandPipeline, Publisher, gakko_config
@@ -40,7 +41,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",  # noqa
-        handlers=[logging.FileHandler("logs/sync.log"), logging.StreamHandler()],
+        handlers=[logging.FileHandler(f"logs/sync_{datetime.now().strftime("%Y-%m-%d")}.log"), logging.StreamHandler()],
     )
 
     main()

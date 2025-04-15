@@ -10,6 +10,6 @@ RUN uv sync --frozen --no-cache
 
 COPY . /app
 
-RUN chmod +x entrypoint.sh && chmod +x setup_cron.sh
+RUN chmod +x entrypoint.sh
 
-CMD ["/bin/bash", "-c", "./setup_cron.sh && ./entrypoint.sh"]
+CMD ["/bin/bash", "-c", "./entrypoint.sh"]

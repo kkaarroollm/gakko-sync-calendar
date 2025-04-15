@@ -1,8 +1,8 @@
 ## TODO:
 
-- [ ] Apply loggers
-- [ ] Add tests
+- [ ] Apply more loggers
+- [x] Add tests
 - [ ] Add docstrings
 - [x] Add Ruff and mypy/pyright
 - [x] Fix Dockerfile 
-- [ ] Cron/entrypoint checks 
+- [x] Cron/entrypoint checks

@@ -15,7 +15,7 @@ class ScrapedTask(BaseModel):
 
     @property
     def full_title(self) -> str:
-        return f"{self.title} [{self.subject}]"
+        return f"{self.title} [{self.subject.replace("Pozostały czas:", "").strip()}]"
 
     def absolute_url(self, base_url: str) -> str:
         return base_url.rstrip("/") + self.href
