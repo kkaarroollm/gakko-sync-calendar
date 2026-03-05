@@ -7,6 +7,7 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
+    environment: docker hub
 
     steps:
       - name: Checkout
