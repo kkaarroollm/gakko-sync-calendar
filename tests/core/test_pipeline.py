@@ -17,7 +17,6 @@ def test_run_executes_commands(command_context):
     pipeline = CommandPipeline(command_context)
     cmd1 = make_fake_command()
     cmd2 = make_fake_command()
-    cmd2.last_response = "/response.org"
     pipeline.add(cmd1).add(cmd2)
     result = pipeline.run()
     assert result is command_context

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from pydantic import FilePath, HttpUrl, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -12,6 +13,11 @@ class GakkoConfig(BaseSettings):
     redirect_uri: HttpUrl = HttpUrl("https://gakko.pjwstk.edu.pl/signin-oidc")
     base_url: HttpUrl = HttpUrl("https://gakko.pjwstk.edu.pl/")
     default_timezone: str = "Europe/Warsaw"
+
+    chrome_headless: bool = True
+    chrome_binary_path: Optional[str] = None
+    selenium_implicit_wait: int = 10
+    selenium_page_load_timeout: int = 30
 
     model_config = SettingsConfigDict(env_file=".env", env_prefix="GAKKO_", env_file_encoding="utf-8")
 
