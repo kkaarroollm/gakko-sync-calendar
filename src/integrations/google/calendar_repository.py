@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 from zoneinfo import ZoneInfo
-
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build  # type: ignore
 
@@ -19,7 +18,7 @@ class GoogleCalendarRepository(Repository[GCalendarEvent]):
     _calendar_id: str = field(init=False)
 
     def __post_init__(self) -> None:
-        self._creds = Credentials.from_authorized_user_file(  # type: ignore
+        self._creds = Credentials.from_authorized_user_file(
             self.config.credentials_path, ["https://www.googleapis.com/auth/calendar"]
         )
         self._service = build("calendar", "v3", credentials=self._creds)
