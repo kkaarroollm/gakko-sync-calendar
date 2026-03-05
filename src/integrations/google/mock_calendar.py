@@ -1,5 +1,4 @@
 from typing import List
-
 from src.core.protocols import Repository
 from src.integrations.google.models import GCalendarEvent
 

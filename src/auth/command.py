@@ -1,36 +1,43 @@
-from bs4 import BeautifulSoup, Tag
+from urllib.parse import urlencode
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 
 from src.auth.models import OAuthAuthorizationRequest
 from src.core import Command, CommandContext
 
 
-class AuthorizeCommand(Command):
+class NavigateToLoginCommand(Command):
+    """Navigate to the ADFS OAuth authorize endpoint.
+    The browser follows the redirect chain to the ADFS login form automatically."""
+
     def execute(self, context: CommandContext) -> CommandContext:
         params = OAuthAuthorizationRequest.from_config(context.config).model_dump(mode="json")
-        context.last_response = context.session.get(str(context.config.authorize_url), params=params)
+        authorize_url = f"{context.config.authorize_url}?{urlencode(params)}"
+        context.driver.get(authorize_url)
         return context
 
 
-class SubmitLoginCommand(Command):
-    def execute(self, context: CommandContext) -> CommandContext:
-        data = {
-            "UserName": context.config.username,
-            "Password": context.config.password.get_secret_value(),
-            "AuthMethod": "FormsAuthentication",
-        }
-        context.last_response = context.session.post(context.last_response.url, data=data)
-        return context
+class SubmitCredentialsCommand(Command):
+    """Fill in the ADFS login form and submit.
+    The browser handles all subsequent redirects (hidden form posts, token exchange) automatically."""
 
-
-class SubmitFormCommand(Command):
-    NO_FORM_ERROR: str = "No form found on page."
+    TIMEOUT: int = 15
 
     def execute(self, context: CommandContext) -> CommandContext:
-        soup = BeautifulSoup(context.last_response.text, "html.parser")
-        if not ((form := soup.find("form")) and isinstance(form, Tag)):
-            raise ValueError(self.NO_FORM_ERROR)
+        wait = WebDriverWait(context.driver, self.TIMEOUT)
 
-        inputs = {i["name"]: i.get("value", "") for i in form.find_all("input") if i.has_attr("name")}
-        action_url = str(form["action"])
-        context.last_response = context.session.post(action_url, data=inputs)
+        username_field = wait.until(expected_conditions.presence_of_element_located((By.ID, "userNameInput")))
+        password_field = context.driver.find_element(By.ID, "passwordInput")
+        submit_button = context.driver.find_element(By.ID, "submitButton")
+
+        username_field.clear()
+        username_field.send_keys(context.config.username)
+        password_field.clear()
+        password_field.send_keys(context.config.password.get_secret_value())
+        submit_button.click()
+
+        wait.until(expected_conditions.url_contains(str(context.config.base_url).rstrip("/")))
+
         return context

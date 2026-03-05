@@ -1,10 +1,9 @@
 import time
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 import faker
 import pytest
-import requests
 from jinja2 import Environment, FileSystemLoader
 from pydantic import HttpUrl
 
@@ -28,13 +27,16 @@ def fake_calendar_repo():
 
 
 @pytest.fixture
-def command_context(mock_config, mock_session):
-    return CommandContext(config=mock_config, session=mock_session)
+def mock_driver():
+    driver = MagicMock()
+    driver.current_url = "https://test.local"
+    driver.page_source = "<html></html>"
+    return driver
 
 
 @pytest.fixture
-def mock_session():
-    return Mock(spec=requests.Session)
+def command_context(mock_config, mock_driver):
+    return CommandContext(config=mock_config, driver=mock_driver)
 
 
 @pytest.fixture
