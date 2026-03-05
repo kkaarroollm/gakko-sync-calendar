@@ -8,7 +8,11 @@ class ScrapeTasksFromDashboardCommand(Command):
     NO_TASKS_FOUND: str = "No tasks found on the dashboard."
 
     def execute(self, context: CommandContext) -> CommandContext:
-        tasks = scrape_tasks_from_dashboard(driver=context.driver, base_url=str(context.config.base_url))
+        tasks = scrape_tasks_from_dashboard(
+            driver=context.driver,
+            base_url=str(context.config.base_url),
+            timeout=context.config.selenium_element_wait,
+        )
         if not tasks:
             raise CommandPipelineError(self.NO_TASKS_FOUND)
 

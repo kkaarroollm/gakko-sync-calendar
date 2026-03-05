@@ -8,12 +8,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from src.tasks.models import ScrapedTask
 
+DEFAULT_ELEMENT_WAIT: int = 10
 
-def scrape_tasks_from_dashboard(driver: WebDriver, base_url: str) -> list[ScrapedTask]:
+
+def scrape_tasks_from_dashboard(
+    driver: WebDriver, base_url: str, timeout: int = DEFAULT_ELEMENT_WAIT
+) -> list[ScrapedTask]:
     driver.get(base_url.rstrip("/") + "/dashboard")
 
     try:
-        container = WebDriverWait(driver, 10).until(
+        container = WebDriverWait(driver, timeout).until(
             expected_conditions.presence_of_element_located((By.ID, "tasks_to_do"))
         )
     except TimeoutException:
