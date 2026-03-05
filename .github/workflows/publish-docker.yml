@@ -8,7 +8,7 @@ jobs:
   push:
     runs-on: ubuntu-latest
     environment: docker hub
-
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
