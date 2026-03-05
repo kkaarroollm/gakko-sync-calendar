@@ -18,6 +18,7 @@ class GakkoConfig(BaseSettings):
     chrome_binary_path: Optional[str] = None
     selenium_implicit_wait: int = 10
     selenium_page_load_timeout: int = 30
+    selenium_element_wait: int = 10
 
     model_config = SettingsConfigDict(env_file=".env", env_prefix="GAKKO_", env_file_encoding="utf-8")
 
