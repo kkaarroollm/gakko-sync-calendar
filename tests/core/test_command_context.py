@@ -87,3 +87,21 @@ def test_create_driver_from_config_with_binary_path():
 
     options = mock_chrome_cls.call_args[1]["options"]
     assert options.binary_location == "/usr/bin/chromium"
+
+
+def test_create_driver_from_config_with_driver_path():
+    config = GakkoConfig(
+        base_url=HttpUrl("https://test.local"),
+        chrome_binary_path="/usr/bin/chromium",
+        chrome_driver_path="/usr/bin/chromedriver",
+    )
+
+    with patch("src.core.command_context.Chrome") as mock_chrome_cls:
+        mock_chrome_cls.return_value = MagicMock()
+
+        from src.core.command_context import _create_driver_from_config
+
+        _create_driver_from_config(config)
+
+    service = mock_chrome_cls.call_args[1]["service"]
+    assert service.path == "/usr/bin/chromedriver"

@@ -3,6 +3,7 @@ from typing import List
 
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from src.core.config import GakkoConfig
@@ -18,7 +19,8 @@ def _create_driver_from_config(config: GakkoConfig) -> WebDriver:
     options.add_argument("--disable-gpu")
     if config.chrome_binary_path:
         options.binary_location = config.chrome_binary_path
-    driver = Chrome(options=options)
+    service = ChromeService(executable_path=config.chrome_driver_path) if config.chrome_driver_path else None
+    driver = Chrome(options=options, service=service)
     driver.implicitly_wait(config.selenium_implicit_wait)
     driver.set_page_load_timeout(config.selenium_page_load_timeout)
     return driver
