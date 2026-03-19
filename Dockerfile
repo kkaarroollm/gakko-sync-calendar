@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
          && apt-get update \
          && apt-get install -y google-chrome-stable; \
        elif [ "$TARGETARCH" = "arm64" ]; then \
-         apt-get install -y chromium; \
+         apt-get install -y chromium chromium-driver; \
        fi \
     && rm -rf /var/lib/apt/lists/*
 

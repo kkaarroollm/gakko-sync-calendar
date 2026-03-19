@@ -16,6 +16,7 @@ class GakkoConfig(BaseSettings):
 
     chrome_headless: bool = True
     chrome_binary_path: Optional[str] = None
+    chrome_driver_path: Optional[str] = None
     selenium_implicit_wait: int = 10
     selenium_page_load_timeout: int = 30
     selenium_element_wait: int = 10
