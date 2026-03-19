@@ -2,7 +2,16 @@
 
 mkdir -p /app/logs
 
-printenv | grep -E "^(GAKKO_USERNAME|GAKKO_PASSWORD|GAKKO_CLIENT_ID|PYTHONPATH)=" >> /etc/environment
+# Auto-detect Chrome/Chromium binary for arm64 compatibility
+if [ -z "$GAKKO_CHROME_BINARY_PATH" ]; then
+  if command -v google-chrome-stable >/dev/null 2>&1; then
+    export GAKKO_CHROME_BINARY_PATH="$(command -v google-chrome-stable)"
+  elif command -v chromium >/dev/null 2>&1; then
+    export GAKKO_CHROME_BINARY_PATH="$(command -v chromium)"
+  fi
+fi
+
+printenv | grep -E "^(GAKKO_USERNAME|GAKKO_PASSWORD|GAKKO_CLIENT_ID|GAKKO_CHROME_BINARY_PATH|PYTHONPATH)=" >> /etc/environment
 
 cat <<EOF > /etc/cron.d/gakko-sync
 SHELL=/bin/bash

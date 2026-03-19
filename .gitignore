@@ -166,3 +166,5 @@ cython_debug/
 token.json
 credentials.json
 src/logs
+gcloud-runner.sh
+    
